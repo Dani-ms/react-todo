@@ -1,23 +1,26 @@
-import { FIND_TODO_REQUEST, FIND_TODO_FAILURE, FIND_TODO_SUCCESS, ADD_TODO_REQUEST, ADD_TODO_SUCCESS,ADD_TODO_FAILURE,DELETE_TODO_REQUEST, DELETE_TODO_SUCCESS, DELETE_TODO_FAILURE} from "./actions";
-import todosapi from "../todos/api";
+import todosapi from "./api";
+import { ThunkAction } from "redux-thunk";
+import { StoreState } from "../store";
+import { TodosActions } from "./actions";
 
+type TodosThunk<R> = ThunkAction<R, StoreState, undefined, TodosActions>
 
-export function findTodos() {
+export function findTodos(): TodosThunk<void> {
     return (dispatch) => {
         dispatch({
-            type: FIND_TODO_REQUEST
+            type: 'FIND_TODOS_REQUEST'
         })
 
 todosapi.findTodos().then( (todos) => {
         dispatch({
-            type: FIND_TODO_SUCCESS,
+            type: 'FIND_TODOS_SUCCESS',
             payload:todos
         
         }) 
         
     }).catch( (error) => {
         dispatch({
-            type: FIND_TODO_FAILURE,
+            type: 'FIND_TODOS_FAILURE',
             error: error
         })
     })
@@ -26,7 +29,7 @@ todosapi.findTodos().then( (todos) => {
 }
 
 export function addTodos(input) {
-    return(dispatch) => {
+    return(dispatch:Dispatch) => {
         dispatch({
             type: ADD_TODO_REQUEST
         })

@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 
 import {findTodos , addTodos, deleteTodos } from '../../logic/todos/thunks';
 
-class Home extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            value: ""
+type Props = {} 
+type State = { value: number}
+
+class Home extends Component<Props, State> {
+    state = {
+            value: 0,
         }
     }
 
@@ -16,12 +17,12 @@ class Home extends React.Component {
         
     }
 
-    onChange = (e) => {
+    onChange = (ev: import('react').ChangeEvent) => {
         this.setState({ value: e.target.value });
     }
 
-    onSubmit = (e) => {
-        e.preventDefault();
+    onSubmit = (ev: import('react').ChangeEvent) => {
+        ev.preventDefault();
 
         this.props.dispatch(addTodos(this.state.value))
     }
