@@ -6,11 +6,6 @@ import store from './logic/store';
 
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
   render() {
     return (<Provider store={store}>
       <Home />

@@ -1,15 +1,27 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { MouseEvent } from 'react'; 
 
 import {findTodos , addTodos, deleteTodos } from '../../logic/todos/thunks';
+import { ThunkDispatch } from 'redux-thunk';
+import { StoreState } from '../../logic/store';
+import { TodosActions } from '../../logic/todos/actions';
+import { Todo } from '../../logic/todos/types';
 
-type Props = {} 
-type State = { value: number}
 
-class Home extends Component<Props, State> {
+
+
+type Props = {}
+    & ReturnType<typeof mapStateToProps>
+    & { dispatch: ThunkDispatch<StoreState, undefined, TodosActions> }
+    
+    
+
+type State = { value: string }
+
+class Home extends React.Component<Props, State> {
     state = {
-            value: 0,
-        }
+        value: '',
     }
 
     componentDidMount() {
@@ -17,17 +29,17 @@ class Home extends Component<Props, State> {
         
     }
 
-    onChange = (ev: import('react').ChangeEvent) => {
-        this.setState({ value: e.target.value });
+    onChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ value: event.target.value });
     }
 
-    onSubmit = (ev: import('react').ChangeEvent) => {
-        ev.preventDefault();
+    onSubmit = (event:MouseEvent ) => {
+        event.preventDefault();
 
         this.props.dispatch(addTodos(this.state.value))
     }
-    onDelete = (e, todoToDelete) =>{
-        e.preventDefault();
+    onDelete = (event:MouseEvent, todoToDelete: Todo) =>{
+        event.preventDefault();
         this.props.dispatch(deleteTodos(todoToDelete))
     }
     render() {
@@ -38,7 +50,7 @@ class Home extends Component<Props, State> {
                 <button onClick={this.onSubmit} value="submit">Enviar</button>
                 <ul>
                 {this.props.todos.data
-                    && this.props.todos.data.map((todo) => (
+                    && this.props.todos.data.map((todo:Todo) => (
                         <li key={`HOME_TODO_${todo}`}>{todo} <button onClick={(e) => this.onDelete(e, todo)} value="submit">Delete</button></li>
                     ))}
                 </ul>
@@ -49,8 +61,8 @@ class Home extends Component<Props, State> {
 
 
 }
-const mapStateToProps = state => {
-    return { todos: state.todos }
+const mapStateToProps = (state: StoreState) => {
+    return { todos: state.todos}
 }
 
 export default connect(mapStateToProps)(Home)
